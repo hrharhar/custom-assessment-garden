@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { AssessmentCard } from "./AssessmentCard";
 import { Search, Send } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";

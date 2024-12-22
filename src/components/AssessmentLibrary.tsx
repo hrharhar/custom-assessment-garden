@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { AssessmentCard } from "./AssessmentCard";
-import { Search, Send } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { SearchBar } from "./assessment/SearchBar";
+import { SelectedAssessments } from "./assessment/SelectedAssessments";
+import { AssessmentGrid } from "./assessment/AssessmentGrid";
+import { SendButton } from "./assessment/SendButton";
 
 const SAMPLE_ASSESSMENTS = [
   {
@@ -70,66 +69,36 @@ export const AssessmentLibrary = () => {
       return;
     }
     
-    // This would typically integrate with your backend
     toast({
       title: "Assessment package created",
       description: `Created assessment package with ${selectedAssessments.length} assessments.`,
     });
   };
 
+  const selectedAssessmentsData = SAMPLE_ASSESSMENTS.filter(
+    (assessment) => selectedAssessments.includes(assessment.id)
+  );
+
   return (
-    <div className="fade-in space-y-6 p-6">
-      <div className="flex items-center justify-between space-x-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search assessments..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Button
-          onClick={handleSendAssessment}
-          className="flex items-center gap-2"
-          disabled={selectedAssessments.length === 0}
-        >
-          <Send className="h-4 w-4" />
-          Send to Candidate ({selectedAssessments.length}/10)
-        </Button>
+    <div className="fade-in space-y-6 p-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between space-x-4 flex-col sm:flex-row gap-4 sm:gap-0">
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+        <SendButton 
+          count={selectedAssessments.length} 
+          onClick={handleSendAssessment} 
+        />
       </div>
       
-      {selectedAssessments.length > 0 && (
-        <div className="bg-muted/50 p-4 rounded-lg">
-          <h3 className="font-medium mb-2">Selected Assessments:</h3>
-          <div className="flex flex-wrap gap-2">
-            {selectedAssessments.map((id) => {
-              const assessment = SAMPLE_ASSESSMENTS.find(a => a.id === id);
-              return (
-                <Badge
-                  key={id}
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => handleAssessmentClick(id)}
-                >
-                  {assessment?.title} ✕
-                </Badge>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <SelectedAssessments
+        selectedAssessments={selectedAssessmentsData}
+        onRemove={handleAssessmentClick}
+      />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredAssessments.map((assessment) => (
-          <AssessmentCard
-            key={assessment.id}
-            {...assessment}
-            isSelected={selectedAssessments.includes(assessment.id)}
-            onClick={() => handleAssessmentClick(assessment.id)}
-          />
-        ))}
-      </div>
+      <AssessmentGrid
+        assessments={filteredAssessments}
+        selectedIds={selectedAssessments}
+        onSelect={handleAssessmentClick}
+      />
     </div>
   );
 };

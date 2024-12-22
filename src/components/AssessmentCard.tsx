@@ -23,7 +23,9 @@ export const AssessmentCard = ({
 }: AssessmentCardProps) => {
   return (
     <Card 
-      className={`hover-scale glass-card cursor-pointer h-full ${isSelected ? 'border-primary' : ''}`}
+      className={`hover-scale glass-card cursor-pointer h-full ${
+        isSelected ? 'border-primary shadow-primary/20' : ''
+      }`}
       onClick={onClick}
     >
       <CardHeader>
@@ -37,7 +39,7 @@ export const AssessmentCard = ({
             <Plus className="h-5 w-5 text-muted-foreground" />
           )}
         </div>
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <CardTitle className="text-xl text-foreground">{title}</CardTitle>
         <CardDescription className="line-clamp-2">{description}</CardDescription>
       </CardHeader>
       <CardContent>
